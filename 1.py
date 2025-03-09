@@ -3,6 +3,11 @@ from oauth2client.service_account import ServiceAccountCredentials
 #from google.oauth2.service_account import Credentials
 import json
 
+# Читаем файл конфигурации
+with open('config.json', 'r', encoding='utf-8') as file:
+    config = json.load(file)
+
+
 
 
 gc = gspread.service_account(filename="./credentials.json")
@@ -23,9 +28,9 @@ conn = http.client.HTTPSConnection("business.tbank.ru")
 payload = ''
 headers = {
   'Accept': 'application/json',
-  'Authorization': 'Bearer ' + tinkoff_token + ''
+  'Authorization': 'Bearer ' + config['tinkoff']['token'] + ''
 }
-conn.request("GET", "/openapi/api/v1/statement?accountNumber=40802810000000840917&from=2022-02-01T21:00:00Z", payload, headers)
+conn.request("GET", "/openapi/api/v1/statement?accountNumber="+config['tinkoff']['account']+"&from=2022-02-01T21:00:00Z", payload, headers)
 res = conn.getresponse()
 data = res.read()
 print(data.decode("utf-8"))
