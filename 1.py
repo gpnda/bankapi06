@@ -1,6 +1,5 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-#from google.oauth2.service_account import Credentials
 import json
 
 # Читаем файл конфигурации
@@ -19,9 +18,7 @@ print(sh.sheet1.acell('A1').value)
 
 
 
-tokenfile_path = './tinkoff-token.txt'
-with open(tokenfile_path, 'r', encoding='utf-8') as file:
-    tinkoff_token = file.read()
+
 
 import http.client
 conn = http.client.HTTPSConnection("business.tbank.ru")
