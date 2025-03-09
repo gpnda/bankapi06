@@ -31,7 +31,7 @@ headers = {
 conn.request("GET", "/openapi/api/v1/statement?accountNumber="+config['tinkoff']['account']+"&from=2024-01-01T00:00:00Z", payload, headers)
 res = conn.getresponse()
 data = res.read()
-
+#print(data.decode("utf-8"))
 
 
 datajson = json.loads(data.decode("utf-8"))
@@ -42,20 +42,33 @@ datajson = json.loads(data.decode("utf-8"))
 
 all_operations = []
 for i, value in enumerate(datajson['operations'], start=1):
+    if(value['typeOfOperation'] == 'Debit'):
+        rubleAmount = value['rubleAmount']*(-1)
+    elif (value['typeOfOperation'] == 'Credit'):
+        rubleAmount = value['rubleAmount']
+    else:
+        rubleAmount = 'Error: typeOfOperation'
     all_operations.append([
         value['operationId'] , 
         value['operationDate'],
-        value['payer']['name'],
-        value['receiver']['name'],
-        value['receiver']['name'],
-        value['receiver']['name']
+        rubleAmount,
+        'ТИНЬКОФФ ОСНОВНОЙ Р/С',
+        ' ',
+        value['counterParty']['name'],
+        value['description'],
+        ' '
         ])
     
-
-sh.sheet1.update(all_operations, 'A1:F10000')
+# "": "Debit"
+sh.sheet1.update([
+    ['ID операции', 'Дата', 'Сумма', 'Кошелек', 'Направление бизнеса', 'Контрагент', 'Назначение платежа', 'Статья'],
+], 'A1:H1')
+sh.sheet1.update(all_operations, 'A2:H10000')
 
 
 
 # Получаем данные с банка в JSON объект
 # Цикл по всем полученных операциям 
-#     Построчно вносим данные в 
+#     Построчно собираем в список списков
+# Обновляем список списков сразу во Range
+
