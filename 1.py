@@ -30,6 +30,17 @@ headers = {
 conn.request("GET", "/openapi/api/v1/statement?accountNumber="+config['tinkoff']['account']+"&from=2022-02-01T21:00:00Z", payload, headers)
 res = conn.getresponse()
 data = res.read()
-print(data.decode("utf-8"))
+
+
+
+datajson = json.loads(data.decode("utf-8"))
+
+for value in datajson['operations']:
+    print(value['operationId'], end="-")
+    print(value['operationDate'], end="-")
+    print(value['payer']['name'], end="-")
+    print(value['receiver']['name'], end="-")
+    print("")
+    
 
 
