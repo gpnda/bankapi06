@@ -1,2 +1,4 @@
 credentials.json
 config.json
+/postman_data*
+/postman_data
